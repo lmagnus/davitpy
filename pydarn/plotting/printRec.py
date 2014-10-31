@@ -116,7 +116,7 @@ def readPrintRec(filename):
   fp.close()
 
 
-def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, channel=None):
+def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, uafchan=None):
   """A function to print the contents of a fit-type file
   
     **Args**:
@@ -127,7 +127,7 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, channel=No
       * **[fileType]**: the filetype to read, 'fitex','fitacf','lmfit'; 
         default = 'fitex'
       * **[summ]**: option to output a beam summary instead of all data
-      * **[channel**: option necessary for reading in UAF channel; default = None
+      * **[uafchan]**: option necessary for reading in UAF channel; default = None
     **Returns**:
       * Nothing
     
@@ -141,23 +141,28 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, channel=No
 
   import pydarn, utils, models
   
-  if channel is None:
+  if uafchan is None:
 	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType)
   else:
-	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType,channel=channel)
+	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType,channel=uafchan)
   if(myPtr == None): return None
+
+  print "HERE!"
   
   myData = pydarn.sdio.radDataReadRec(myPtr)
   if(myData == None): return None
   
-  
+  print "Got data?"
   radar = pydarn.radar.network().getRadarByCode(rad)
   site = radar.getSiteByDate(myData.time)
   myFov = pydarn.radar.radFov.fov(site=site,rsep=myData.prm.rsep,ngates=myData.prm.nrang, model=None, altitude=300.)
+
+  print radar
   
   
   f = open(outfile, 'w')
-  
+
+  print "Writing information to %s" % outfile  
   
   t = myData.time
   

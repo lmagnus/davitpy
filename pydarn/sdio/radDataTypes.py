@@ -131,6 +131,8 @@ class radDataPtr():
     if (self.channel=='all'):
       channel = '.'
 
+    print channel
+
     if(self.eTime == None):
       self.eTime = self.sTime+dt.timedelta(days=1)
 
@@ -540,6 +542,8 @@ class radDataPtr():
      fitData, prmData, rawData, iqData, alpha
      import pydarn, datetime as dt
 
+     print "Made it to readrec"
+	
      #check input
      if(self.__ptr == None):
          print 'error, your pointer does not point to any data'
@@ -551,8 +555,21 @@ class radDataPtr():
      #do this until we reach the requested start time
      #and have a parameter match
      while(1):
+	 print "Looping?"
          offset=pydarn.dmapio.getDmapOffset(self.__fd)
          dfile = pydarn.dmapio.readDmapRec(self.__fd)
+	 if dfile == None:
+		print "YEA, WE DUN"	
+	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
+	 print str(self.sTime)
+	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
+	 print str(self.eTime)
+	 print str(dfile['stid'])
+	 print str(self.stid)
+	 print str(dfile['bmnum'])
+	 print str(self.bmnum)
+	 print str(dfile['cp'])
+	 print str(self.cp)
          #check for valid data
          if dfile == None or dt.datetime.utcfromtimestamp(dfile['time']) > self.eTime:
              #if we dont have valid data, clean up, get out
@@ -563,13 +580,20 @@ class radDataPtr():
          #match for the desired params
          #if dfile['channel'] < 2: channel = 'a'  THIS CHECK IS BAD. 'channel' in a dmap file specifies STEREO operation or not.
          #else: channel = alpha[dfile['channel']-1]
+	 if dt.datetime.utcfromtimestamp(dfile['time']) >= self.sTime: print 	"passed 1"
+	 if dt.datetime.utcfromtimestamp(dfile['time']) <= self.eTime: print 	"passed 2"
+	 if (self.stid == None or self.stid == dfile['stid']): print		"passed 3"
+	 if (self.bmnum == None or self.bmnum == dfile['bmnum']): print		"passed 4"
+	 if (self.cp == None or self.cp == dfile['cp']): print			"passed 5"
          if(dt.datetime.utcfromtimestamp(dfile['time']) >= self.sTime and \
                dt.datetime.utcfromtimestamp(dfile['time']) <= self.eTime and \
-               (self.stid == None or self.stid == dfile['stid']) and
+               (self.stid == None or self.stid == dfile['stid']) and \
                #(self.channel == None or self.channel == channel) and ASR removed because of bad check as above.
-               (self.bmnum == None or self.bmnum == dfile['bmnum']) and
+               (self.bmnum == None or self.bmnum == dfile['bmnum']) and \
                (self.cp == None or self.cp == dfile['cp'])):
              #fill the beamdata object
+	     print "reading data"
+             sys.exit(-1)
              myBeam.updateValsFromDict(dfile)
              myBeam.recordDict=dfile
              myBeam.fType = self.fType
