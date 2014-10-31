@@ -116,7 +116,7 @@ def readPrintRec(filename):
   fp.close()
 
 
-def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0):
+def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, channel=None):
   """A function to print the contents of a fit-type file
   
     **Args**:
@@ -127,6 +127,7 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0):
       * **[fileType]**: the filetype to read, 'fitex','fitacf','lmfit'; 
         default = 'fitex'
       * **[summ]**: option to output a beam summary instead of all data
+      * **[channel**: option necessary for reading in UAF channel; default = None
     **Returns**:
       * Nothing
     
@@ -140,7 +141,10 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0):
 
   import pydarn, utils, models
   
-  myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType)
+  if channel is None:
+	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType)
+  else:
+	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType,channel=channel)
   if(myPtr == None): return None
   
   myData = pydarn.sdio.radDataReadRec(myPtr)
