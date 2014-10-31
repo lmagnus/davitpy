@@ -105,6 +105,8 @@ class radDataPtr():
     self.__fd = None
     self.__ptr =  None
 
+    print "In radDataPtr"
+
     #check inputs
     assert(isinstance(self.sTime,dt.datetime)), \
       'error, sTime must be datetime object'
@@ -130,8 +132,6 @@ class radDataPtr():
     # If channel is all, then make the channel a wildcard, then it will pull in all UAF channels
     if (self.channel=='all'):
       channel = '.'
-
-    print channel
 
     if(self.eTime == None):
       self.eTime = self.sTime+dt.timedelta(days=1)
@@ -258,6 +258,7 @@ class radDataPtr():
                     print "Error, no file name formats containing channel exists!"
                     break
 
+		print "From radDataPtr calling fetch_local_files"
                 #fetch the local files
                 filelist = fetch_local_files(self.sTime, self.eTime, local_dirfmt, local_dict, outdir, \
                 local_fnamefmt, time_inc=local_timeinc, verbose=verbose)
@@ -542,7 +543,7 @@ class radDataPtr():
      fitData, prmData, rawData, iqData, alpha
      import pydarn, datetime as dt
 
-     print "Made it to readrec"
+     print "Made it to readRec"
 	
      #check input
      if(self.__ptr == None):
@@ -555,21 +556,21 @@ class radDataPtr():
      #do this until we reach the requested start time
      #and have a parameter match
      while(1):
-	 print "Looping?"
+#	 print "Looping?"
          offset=pydarn.dmapio.getDmapOffset(self.__fd)
          dfile = pydarn.dmapio.readDmapRec(self.__fd)
-	 if dfile == None:
-		print "YEA, WE DUN"	
-	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
-	 print str(self.sTime)
-	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
-	 print str(self.eTime)
-	 print str(dfile['stid'])
-	 print str(self.stid)
-	 print str(dfile['bmnum'])
-	 print str(self.bmnum)
-	 print str(dfile['cp'])
-	 print str(self.cp)
+#	 if dfile == None:
+#		print "YEA, WE DUN"	
+#	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
+#	 print str(self.sTime)
+#	 print str(dt.datetime.utcfromtimestamp(dfile['time']))
+#	 print str(self.eTime)
+#	 print str(dfile['stid'])
+#	 print str(self.stid)
+#	 print str(dfile['bmnum'])
+#	 print str(self.bmnum)
+#	 print str(dfile['cp'])
+#	 print str(self.cp)
          #check for valid data
          if dfile == None or dt.datetime.utcfromtimestamp(dfile['time']) > self.eTime:
              #if we dont have valid data, clean up, get out
@@ -580,11 +581,11 @@ class radDataPtr():
          #match for the desired params
          #if dfile['channel'] < 2: channel = 'a'  THIS CHECK IS BAD. 'channel' in a dmap file specifies STEREO operation or not.
          #else: channel = alpha[dfile['channel']-1]
-	 if dt.datetime.utcfromtimestamp(dfile['time']) >= self.sTime: print 	"passed 1"
-	 if dt.datetime.utcfromtimestamp(dfile['time']) <= self.eTime: print 	"passed 2"
-	 if (self.stid == None or self.stid == dfile['stid']): print		"passed 3"
-	 if (self.bmnum == None or self.bmnum == dfile['bmnum']): print		"passed 4"
-	 if (self.cp == None or self.cp == dfile['cp']): print			"passed 5"
+#	 if dt.datetime.utcfromtimestamp(dfile['time']) >= self.sTime: print 	"passed 1"
+#	 if dt.datetime.utcfromtimestamp(dfile['time']) <= self.eTime: print 	"passed 2"
+#	 if (self.stid == None or self.stid == dfile['stid']): print		"passed 3"
+#	 if (self.bmnum == None or self.bmnum == dfile['bmnum']): print		"passed 4"
+#	 if (self.cp == None or self.cp == dfile['cp']): print			"passed 5"
          if(dt.datetime.utcfromtimestamp(dfile['time']) >= self.sTime and \
                dt.datetime.utcfromtimestamp(dfile['time']) <= self.eTime and \
                (self.stid == None or self.stid == dfile['stid']) and \

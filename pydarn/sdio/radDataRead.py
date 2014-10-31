@@ -107,6 +107,7 @@ def radDataOpen(sTime,radcode,eTime=None,channel=None,bmnum=None,cp=None,\
   from pydarn.sdio import radDataPtr
   from pydarn.radar import network
 
+  print "From radDataOpen calling radDataPtr"
   myPtr = radDataPtr(sTime=sTime,radcode=radcode,eTime=eTime,            \
                channel=channel,bmnum=bmnum,cp=cp,fileType=fileType,      \
                filtered=filtered,src=src,fileName=fileName,              \

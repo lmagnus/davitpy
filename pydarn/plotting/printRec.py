@@ -144,11 +144,11 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, uafchan=No
   if uafchan is None:
 	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType)
   else:
+	print "From fitPrintRec calling radDataOpen"
 	myPtr = pydarn.sdio.radDataOpen(sTime,rad,eTime=eTime,fileType=fileType,channel=uafchan)
   if(myPtr == None): return None
 
-  print "HERE!"
-  
+  print "From fitPrintRec calling radDataReadRec"
   myData = pydarn.sdio.radDataReadRec(myPtr)
   if(myData == None): return None
   
@@ -157,7 +157,7 @@ def fitPrintRec(sTime, eTime, rad, outfile, fileType='fitex', summ=0, uafchan=No
   site = radar.getSiteByDate(myData.time)
   myFov = pydarn.radar.radFov.fov(site=site,rsep=myData.prm.rsep,ngates=myData.prm.nrang, model=None, altitude=300.)
 
-  print radar
+#  print radar
   
   
   f = open(outfile, 'w')
